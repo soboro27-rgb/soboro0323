@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XpertStation WS300 vs H200 4-GPU Server</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#04060d;--card:#080c18;--border:#0f1a2e;
+  --ws:#76c442;--wsg:rgba(118,196,66,.12);
+  --h2:#00b4d8;--h2g:rgba(0,180,216,.12);
+  --gold:#f5a623;--red:#ff4d6d;
+  --text:#cdd5e0;--muted:#4a5568;--white:#e8edf5;
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,180,216,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,216,.025) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:36px 20px 48px;}
+
+.page-header{text-align:center;margin-bottom:38px;animation:fadeUp .7s ease;}
+.tag-line{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.page-title{font-family:'Orbitron',monospace;font-size:clamp(18px,3.2vw,32px);font-weight:900;letter-spacing:2px;line-height:1.25;margin-bottom:8px;}
+.wc{color:var(--ws);}.hc{color:var(--h2);}.vc{color:var(--muted);font-size:.52em;margin:0 10px;}
+.page-sub{font-size:12px;color:var(--muted);}
+
+/* PERF BANNER */
+.perf-banner{background:linear-gradient(135deg,rgba(118,196,66,.07),rgba(245,166,35,.05),rgba(118,196,66,.07));border:1px solid rgba(118,196,66,.3);border-radius:12px;padding:16px 22px;margin-bottom:26px;display:flex;align-items:center;gap:16px;animation:fadeUp .6s ease .05s both;}
+.pi{font-size:30px;flex-shrink:0;}
+.pt{flex:1;}
+.pl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--ws);text-transform:uppercase;margin-bottom:4px;}
+.pb{font-size:12.5px;line-height:1.65;color:var(--white);}
+.pb strong{color:var(--gold);}.pb .wt{color:var(--ws);font-weight:700;}.pb .ht{color:var(--h2);}
+
+/* PRODUCTS */
+.products{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px;}
+.pcard{border-radius:12px;border:1px solid var(--border);overflow:hidden;position:relative;animation:fadeUp .6s ease both;}
+.pcard.ws{border-color:rgba(118,196,66,.3);background:linear-gradient(145deg,rgba(118,196,66,.07),var(--card) 55%);}
+.pcard.h2{border-color:rgba(0,180,216,.3);background:linear-gradient(145deg,rgba(0,180,216,.07),var(--card) 55%);}
+.pcard:nth-child(2){animation-delay:.1s;}
+.pg{position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:160px;height:90px;border-radius:50%;filter:blur(32px);opacity:.4;pointer-events:none;}
+.ws .pg{background:var(--ws);}.h2 .pg{background:var(--h2);}
+.ph{padding:12px 16px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.pb2{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;}
+.ws .pb2{color:var(--ws);}.h2 .pb2{color:var(--h2);}
+.pbadge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:20px;letter-spacing:1px;}
+.ws .pbadge{background:rgba(118,196,66,.15);color:var(--ws);border:1px solid rgba(118,196,66,.3);}
+.h2 .pbadge{background:rgba(0,180,216,.15);color:var(--h2);border:1px solid rgba(0,180,216,.3);}
+.pimg{height:190px;display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden;}
+.pimg img{max-height:160px;max-width:100%;object-fit:contain;filter:drop-shadow(0 6px 24px rgba(0,0,0,.65));transition:transform .4s;}
+.pcard:hover .pimg img{transform:scale(1.04);}
+.svgbox{width:250px;height:160px;}
+.pname{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:1px;padding:12px 16px 4px;}
+.ws .pname{color:var(--ws);}.h2 .pname{color:var(--h2);}
+.pdesc{font-size:11px;color:var(--muted);padding:0 16px 12px;line-height:1.6;}
+.pspecs{padding:10px 16px 14px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.sl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:1px;}
+.sv{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:500;color:var(--white);}
+
+/* SECTION TITLE */
+.stitle{font-family:'Orbitron',monospace;font-size:11.5px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:13px;display:flex;align-items:center;gap:10px;}
+.stitle::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* PHYSICAL GRID */
+.phys-section{margin-bottom:26px;animation:fadeUp .6s ease .15s both;}
+.phys-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.phys-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 15px;}
+.pico{font-size:20px;margin-bottom:7px;}
+.ptopic{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:9px;}
+.prow{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:7px;}
+.prow:last-child{margin-bottom:0;}
+.plbl{font-size:10px;color:var(--muted);flex-shrink:0;}
+.pwv{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ws);font-weight:500;text-align:right;line-height:1.4;}
+.phv{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--h2);font-weight:500;text-align:right;line-height:1.4;}
+.wt{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8px;padding:1px 5px;border-radius:8px;margin-left:3px;}
+.wws{background:rgba(118,196,66,.2);color:var(--ws);border:1px solid rgba(118,196,66,.4);}
+.wh2{background:rgba(0,180,216,.2);color:var(--h2);border:1px solid rgba(0,180,216,.4);}
+
+/* SERVER ROOM */
+.sr-section{margin-bottom:26px;animation:fadeUp .6s ease .2s both;}
+.sr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.sr-card{border-radius:10px;padding:16px 18px;border:1px solid var(--border);}
+.sr-card.sws{background:rgba(118,196,66,.05);border-color:rgba(118,196,66,.25);}
+.sr-card.sh2{background:rgba(241,53,96,.05);border-color:rgba(241,53,96,.25);}
+.srt{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.sws .srt{color:var(--ws);}.sh2 .srt{color:var(--red);}
+.srp{display:flex;gap:7px;font-size:11.5px;color:var(--text);margin-bottom:6px;line-height:1.5;}
+.sws .srp::before{content:'✓';color:var(--ws);flex-shrink:0;font-weight:700;}
+.sh2 .srp::before{content:'✗';color:var(--red);flex-shrink:0;font-weight:700;}
+.srcb{margin-top:10px;padding:7px 11px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10.5px;}
+.sws .srcb{background:rgba(118,196,66,.1);color:var(--ws);}
+.sh2 .srcb{background:rgba(241,53,96,.1);color:var(--red);}
+
+/* COST TABLE */
+.cost-section{margin-bottom:26px;animation:fadeUp .6s ease .25s both;}
+.cost-table{width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+.cost-table thead tr{background:rgba(255,255,255,.03);}
+.cost-table th{padding:12px 13px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;text-align:left;border-bottom:1px solid var(--border);}
+.cost-table th.wc2{color:var(--ws);}.cost-table th.hc2{color:var(--h2);}.cost-table th.mc{color:var(--muted);}
+.cost-table tbody tr{border-bottom:1px solid var(--border);transition:background .2s;}
+.cost-table tbody tr:last-child{border-bottom:none;}
+.cost-table tbody tr:hover{background:rgba(255,255,255,.02);}
+.cost-table tr.shd td{background:rgba(255,255,255,.025);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:6px 13px;border-top:1px solid var(--border);}
+.cost-table td{padding:10px 13px;font-size:12.5px;}
+.cost-table td.cat{color:var(--text);font-size:12px;}
+.cost-table td.wv{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ws);font-weight:500;}
+.cost-table td.hv{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--h2);font-weight:500;}
+.cost-table td.nt{font-size:10.5px;color:var(--muted);font-style:italic;}
+.cost-table td.na{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(118,196,66,.4);}
+.cost-table tr.tr td{background:rgba(245,166,35,.06);border-top:2px solid rgba(245,166,35,.3);font-weight:700;font-family:'JetBrains Mono',monospace;}
+.cost-table tr.tr td.cat{color:var(--gold);font-size:12px;}
+.cost-table tr.tr td.wv{color:var(--ws);font-size:12.5px;}
+.cost-table tr.tr td.hv{color:var(--h2);font-size:12.5px;}
+.wb2{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8px;padding:1px 5px;border-radius:8px;margin-left:4px;vertical-align:middle;}
+
+/* VERDICT */
+.verdict{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:26px;animation:fadeUp .6s ease .3s both;}
+.vc2{border-radius:10px;padding:16px 18px;border:1px solid var(--border);}
+.vc2.vws{background:rgba(118,196,66,.05);border-color:rgba(118,196,66,.25);}
+.vc2.vh2{background:rgba(0,180,216,.05);border-color:rgba(0,180,216,.25);}
+.vtitle{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.vws .vtitle{color:var(--ws);}.vh2 .vtitle{color:var(--h2);}
+.vp{display:flex;gap:7px;font-size:11.5px;color:var(--text);margin-bottom:6px;line-height:1.5;}
+.vws .vp::before{content:'▸';color:var(--ws);flex-shrink:0;}
+.vh2 .vp::before{content:'▸';color:var(--h2);flex-shrink:0;}
+
+/* SUMMARY */
+.sum-bar{background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.25);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:16px;animation:fadeUp .6s ease .35s both;margin-bottom:16px;}
+.si2{font-size:24px;flex-shrink:0;}
+.st2{flex:1;}
+.slbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:4px;}
+.sbody{font-size:12px;color:var(--text);line-height:1.65;}
+.sbody strong{color:var(--gold);}
+
+.footer{text-align:center;padding-top:16px;border-top:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){
+  .products,.sr-grid,.verdict{grid-template-columns:1fr;}
+  .phys-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="tag-line">// AI 인프라 도입 비용 비교 분석 · 2026</div>
+  <div class="page-title">
+    <span class="wc">XpertStation WS300</span>
+    <span class="vc">VS</span>
+    <span class="hc">H200 4-GPU Server</span>
+  </div>
+  <div class="page-sub">사이즈 · 소음 · 발열 · 서버실 · 구축비용 · 운영비용 · 3년 TCO 완전 비교</div>
+</div>
+
+<!-- PERF BANNER -->
+<div class="perf-banner">
+  <div class="pi">⚡</div>
+  <div class="pt">
+    <div class="pl">// 핵심 전제 · WHY THIS COMPARISON</div>
+    <div class="pb">
+      <span class="wt">WS300 (GB300 Grace Blackwell Ultra)</span>은 단일 칩으로 <strong>20 PFLOPS FP8 · 748GB 통합 메모리 · 4.8TB/s 대역폭</strong>을 구현합니다.
+      <span class="ht">H200 4-GPU 서버</span>는 GPU 4장 합산 <strong>~16 PFLOPS · 564GB HBM3e</strong>로,
+      <strong>WS300이 H200 4장 이상의 AI 연산 성능 및 메모리 용량을 상회</strong>합니다.
+      이 압도적 성능 차이를 <strong>타워 PC 크기 · 35~45dB 도서관 수준 정숙 · 수냉+공냉 하이브리드 내장 · 서버실 완전 불필요</strong>로 구현한다는 것이 핵심입니다.
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT CARDS -->
+<div class="products">
+  <div class="pcard ws">
+    <div class="pg"></div>
+    <div class="ph">
+      <div class="pb2">MSI · NVIDIA DGX Station Architecture</div>
+      <div class="pbadge">DESKSIDE</div>
+    </div>
+    <div class="pimg">
+      <img src="https://www.prnewswire.com/content/dam/prnewswire/homepage/prn_cision_upload/2026/03/16/EN74748/XpertStation-WS300-on-NVIDIA-DGX-Station-Architecture-768x640.jpg"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" alt="WS300">
+      <svg style="display:none;" viewBox="0 0 260 160" fill="none" xmlns="http://www.w3.org/2000/svg" class="svgbox">
+        <rect x="50" y="15" width="160" height="130" rx="9" fill="#0d1f0d" stroke="#76c442" stroke-width="1.5"/>
+        <rect x="65" y="30" width="130" height="80" rx="4" fill="#0a160a" stroke="#76c44230"/>
+        <rect x="75" y="40" width="50" height="30" rx="3" fill="#1a3a1a" stroke="#76c44260"/><text x="100" y="59" font-family="monospace" font-size="8" fill="#76c442" text-anchor="middle">GPU</text>
+        <rect x="135" y="40" width="50" height="30" rx="3" fill="#1a3a1a" stroke="#76c44260"/><text x="160" y="59" font-family="monospace" font-size="8" fill="#76c442" text-anchor="middle">MEM</text>
+        <rect x="75" y="78" width="110" height="24" rx="3" fill="#1a3a1a" stroke="#76c44240"/>
+        <text x="130" y="94" font-family="monospace" font-size="7" fill="#76c44299" text-anchor="middle">GB300 Grace Blackwell Ultra</text>
+        <rect x="65" y="120" width="130" height="7" rx="2" fill="#76c44220"/>
+        <circle cx="80" cy="142" r="4" fill="#76c442" opacity=".8"/>
+        <text x="175" y="146" font-family="monospace" font-size="9" fill="#76c442" text-anchor="middle">WS300</text>
+      </svg>
+    </div>
+    <div class="pname">XpertStation WS300</div>
+    <div class="pdesc">NVIDIA GB300 Grace Blackwell Ultra 데스크사이드 AI 슈퍼컴퓨터. 사무실 책상 옆에 데이터센터급 성능.</div>
+    <div class="pspecs">
+      <div><div class="sl">AI Perf.</div><div class="sv" style="color:var(--ws)">20 PFLOPS ↑↑</div></div>
+      <div><div class="sl">Memory</div><div class="sv" style="color:var(--ws)">748GB 통합</div></div>
+      <div><div class="sl">크기</div><div class="sv">타워 PC 수준</div></div>
+      <div><div class="sl">무게</div><div class="sv">약 30kg</div></div>
+      <div><div class="sl">소음</div><div class="sv" style="color:var(--ws)">35~45 dB ↓↓</div></div>
+      <div><div class="sl">전력</div><div class="sv">1,600W</div></div>
+      <div><div class="sl">냉각</div><div class="sv" style="color:var(--ws)">수냉+공냉 하이브리드</div></div>
+      <div><div class="sl">Price</div><div class="sv" style="color:var(--ws)">~$85,000</div></div>
+    </div>
+  </div>
+
+  <div class="pcard h2">
+    <div class="pg"></div>
+    <div class="ph">
+      <div class="pb2">Supermicro / Dell · NVIDIA HGX H200 4-GPU</div>
+      <div class="pbadge">RACKMOUNT</div>
+    </div>
+    <div class="pimg">
+      <svg viewBox="0 0 300 165" fill="none" xmlns="http://www.w3.org/2000/svg" class="svgbox">
+        <rect x="18" y="26" width="264" height="46" rx="4" fill="#050f1a" stroke="#00b4d8" stroke-width="1.5"/>
+        <rect x="18" y="78" width="264" height="38" rx="4" fill="#050f1a" stroke="#00b4d840"/>
+        <rect x="28" y="35" width="16" height="28" rx="2" fill="#051520" stroke="#00b4d860"/>
+        <rect x="48" y="35" width="16" height="28" rx="2" fill="#051520" stroke="#00b4d860"/>
+        <rect x="74" y="30" width="48" height="38" rx="2" fill="#071e2e" stroke="#00b4d8" stroke-width="1.2"/>
+        <text x="98" y="53" font-family="monospace" font-size="8" fill="#00b4d8" text-anchor="middle">H200</text>
+        <rect x="128" y="30" width="48" height="38" rx="2" fill="#071e2e" stroke="#00b4d8" stroke-width="1.2"/>
+        <text x="152" y="53" font-family="monospace" font-size="8" fill="#00b4d8" text-anchor="middle">H200</text>
+        <rect x="182" y="30" width="48" height="38" rx="2" fill="#071e2e" stroke="#00b4d8" stroke-width="1.2"/>
+        <text x="206" y="53" font-family="monospace" font-size="8" fill="#00b4d8" text-anchor="middle">H200</text>
+        <rect x="236" y="30" width="42" height="38" rx="2" fill="#071e2e" stroke="#00b4d8" stroke-width="1.2"/>
+        <text x="257" y="53" font-family="monospace" font-size="8" fill="#00b4d8" text-anchor="middle">H200</text>
+        <line x1="122" y1="49" x2="128" y2="49" stroke="#00b4d8" stroke-width="1.5"/>
+        <line x1="176" y1="49" x2="182" y2="49" stroke="#00b4d8" stroke-width="1.5"/>
+        <line x1="230" y1="49" x2="236" y2="49" stroke="#00b4d8" stroke-width="1.5"/>
+        <rect x="28" y="86" width="80" height="22" rx="2" fill="#051520" stroke="#00b4d840"/>
+        <text x="68" y="101" font-family="monospace" font-size="7.5" fill="#00b4d899" text-anchor="middle">2× Xeon CPU</text>
+        <rect x="118" y="86" width="154" height="22" rx="2" fill="#051520" stroke="#00b4d840"/>
+        <text x="195" y="101" font-family="monospace" font-size="7.5" fill="#00b4d899" text-anchor="middle">512GB DDR5 RAM</text>
+        <circle cx="35" cy="140" r="3" fill="#00b4d8" opacity=".9"/>
+        <text x="175" y="145" font-family="monospace" font-size="9" fill="#00b4d8" text-anchor="middle">4U RACK SERVER · HGX H200 × 4</text>
+      </svg>
+    </div>
+    <div class="pname">HGX H200 4-GPU Server</div>
+    <div class="pdesc">4× NVIDIA H200 SXM 141GB NVLink 연결 4U 랙마운트. 데이터센터 전용 설치형.</div>
+    <div class="pspecs">
+      <div><div class="sl">AI Perf.</div><div class="sv">~16 PFLOPS</div></div>
+      <div><div class="sl">GPU Mem</div><div class="sv">564GB HBM3e</div></div>
+      <div><div class="sl">크기</div><div class="sv">4U 19" 랙마운트</div></div>
+      <div><div class="sl">무게</div><div class="sv">70~90kg</div></div>
+      <div><div class="sl">소음</div><div class="sv">75~85 dB</div></div>
+      <div><div class="sl">전력</div><div class="sv">2,800W+</div></div>
+      <div><div class="sl">냉각</div><div class="sv">고압 강제냉각</div></div>
+      <div><div class="sl">Price</div><div class="sv" style="color:var(--h2)">~$280,000</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHYSICAL -->
+<div class="phys-section">
+  <div class="stitle">물리적 환경 비교 · PHYSICAL &amp; ENVIRONMENT</div>
+  <div class="phys-grid">
+    <div class="phys-card">
+      <div class="pico">📐</div>
+      <div class="ptopic">사이즈 / 무게</div>
+      <div class="prow"><span class="plbl">WS300</span><span class="pwv">타워PC 수준<br>~250×500×550mm<br>약 30kg <span class="wt wws">✓ 유리</span></span></div>
+      <div class="prow"><span class="plbl">H200</span><span class="phv">4U 19" 랙마운트<br>482×175×800mm<br>70~90kg + 랙 필요</span></div>
+    </div>
+    <div class="phys-card">
+      <div class="pico">🔊</div>
+      <div class="ptopic">소음 수준</div>
+      <div class="prow"><span class="plbl">WS300</span><span class="pwv">35~45 dB<br>도서관·일반 대화 수준<br>동일 공간 업무 가능 <span class="wt wws">✓ 압도적 유리</span></span></div>
+      <div class="prow"><span class="plbl">H200</span><span class="phv">75~85 dB<br>공장 기계 수준<br>반드시 격리 필수</span></div>
+    </div>
+    <div class="phys-card">
+      <div class="pico">🌡️</div>
+      <div class="ptopic">발열 / 냉각</div>
+      <div class="prow"><span class="plbl">WS300</span><span class="pwv">1,600W TDP<br>🔵수냉(CPU·GPU 핵심부)<br>+ 🌬️공냉 하이브리드<br>외부 냉각 불필요 <span class="wt wws">✓ 유리</span></span></div>
+      <div class="prow"><span class="plbl">H200</span><span class="phv">2,800W+ TDP<br>고압 강제공냉 팬<br>항온항습 시스템 필수</span></div>
+    </div>
+    <div class="phys-card">
+      <div class="pico">⚡</div>
+      <div class="ptopic">전력 / 설치</div>
+      <div class="prow"><span class="plbl">WS300</span><span class="pwv">240V 단상<br>일반 콘센트 OK<br>즉시 설치 가능 <span class="wt wws">✓ 유리</span></span></div>
+      <div class="prow"><span class="plbl">H200</span><span class="phv">3상 전력 필수<br>PDU / UPS 필요<br>전문 전기공사 필수</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVER ROOM -->
+<div class="sr-section">
+  <div class="stitle">서버실 운영 차이 · SERVER ROOM REQUIREMENT</div>
+  <div class="sr-grid">
+    <div class="sr-card sws">
+      <div class="srt">✅ WS300 — 서버실 완전 불필요</div>
+      <div class="srp">일반 사무실 책상 옆에 바로 설치, 즉시 운영</div>
+      <div class="srp">35~45dB — 도서관 수준의 정숙함, 동일 공간 업무 완전 가능</div>
+      <div class="srp">수냉+공냉 하이브리드 — CPU·GPU 핵심부 수냉, 외부 항온항습 불필요</div>
+      <div class="srp">일반 240V 단상 콘센트로 전원 공급 가능</div>
+      <div class="srp">이동·재배치 자유 (일반 핸드트럭으로 이동)</div>
+      <div class="srp">데이터 보안 — 외부 IDC 없이 사내 완전 격리 가능</div>
+      <div class="srcb">🏢 서버실 구축 비용 = ₩0 · 운영 인력 추가 불필요</div>
+    </div>
+    <div class="sr-card sh2">
+      <div class="srt">❌ H200 Server — 전용 서버실 필수</div>
+      <div class="srp">75~85dB — 대화 불가 수준, 반드시 별도 공간 격리</div>
+      <div class="srp">2,800W+ 발열 — 항온항습 공조 시스템 필수 구축</div>
+      <div class="srp">3상 전력 / PDU / UPS 전문 전기공사 필수</div>
+      <div class="srp">19" 랙 / 케이블 트레이 / 바닥 하중 보강 공사</div>
+      <div class="srp">보안 출입통제 · 소화설비 · 24시간 환경 모니터링</div>
+      <div class="srp">전담 인프라 엔지니어 상시 운영 또는 IDC 코로케이션</div>
+      <div class="srcb">🏗️ 서버실 구축비 ₩5,000만 ~ ₩2억+ · 연간 운영비 별도</div>
+    </div>
+  </div>
+</div>
+
+<!-- COST TABLE -->
+<div class="cost-section">
+  <div class="stitle">전체 비용 비교 · FULL COST BREAKDOWN</div>
+  <table class="cost-table">
+    <thead>
+      <tr>
+        <th class="mc" style="width:32%">항목</th>
+        <th class="wc2" style="width:24%">🟢 WS300</th>
+        <th class="hc2" style="width:24%">🔵 H200 4-GPU Server</th>
+        <th class="mc" style="width:20%">비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="shd"><td colspan="4">// 초기 구축 비용 (CAPEX)</td></tr>
+      <tr><td class="cat">본체 / 하드웨어</td><td class="wv">₩118,000,000</td><td class="hv">₩390,000,000</td><td class="nt">$85K / $280K 기준</td></tr>
+      <tr><td class="cat">서버실 구축 (랙·항온항습·전기)</td><td class="na">불필요 ✓</td><td class="hv">₩50,000,000~</td><td class="nt">항온항습·랙·3상 공사</td></tr>
+      <tr><td class="cat">전력 인프라 (PDU/UPS)</td><td class="na">일반 콘센트 ✓</td><td class="hv">₩15,000,000~</td><td class="nt">3상 분전반·UPS</td></tr>
+      <tr><td class="cat">냉각 시스템</td><td class="na">자체 내장 ✓</td><td class="hv">₩10,000,000~</td><td class="nt">항온항습기 별도</td></tr>
+      <tr><td class="cat">네트워크 인프라</td><td class="wv">₩1,500,000</td><td class="hv">₩15,000,000~</td><td class="nt">IB 스위치·케이블</td></tr>
+      <tr><td class="cat">설치 / 셋업 공수</td><td class="wv">₩500,000</td><td class="hv">₩8,000,000~</td><td class="nt">랙 마운트 설치 공사</td></tr>
+      <tr class="tr"><td class="cat">📦 구축 합계</td><td class="wv">₩120,000,000 <span class="wb2 wws">✓ 4.1배 저렴</span></td><td class="hv">₩488,000,000~</td><td class="nt" style="color:var(--gold)">WS300 압도적 우위</td></tr>
+
+      <tr class="shd"><td colspan="4">// 연간 운영 비용 (OPEX)</td></tr>
+      <tr><td class="cat">전력 소비 (연간)</td><td class="wv">₩1,680,000</td><td class="hv">₩2,928,000</td><td class="nt">1.6kW vs 2.8kW·₩120/kWh</td></tr>
+      <tr><td class="cat">서버실 냉방·운영 전기</td><td class="na">해당없음 ✓</td><td class="hv">₩6,000,000~</td><td class="nt">항온항습 연간 운영</td></tr>
+      <tr><td class="cat">IDC 코로케이션 / 공간 임차</td><td class="na">사무실 내 설치 ✓</td><td class="hv">₩12,000,000~</td><td class="nt">IDC 랙 월 100만~</td></tr>
+      <tr><td class="cat">유지보수 / 지원 계약</td><td class="wv">₩3,000,000</td><td class="hv">₩10,000,000~</td><td class="nt">엔터프라이즈 서포트</td></tr>
+      <tr><td class="cat">SW 라이선스 / AI Stack</td><td class="wv">₩5,000,000</td><td class="hv">₩8,000,000~</td><td class="nt">NVIDIA AI Enterprise</td></tr>
+      <tr><td class="cat">인프라 전담 IT 인력</td><td class="wv">최소화 가능</td><td class="hv">₩10,000,000~</td><td class="nt">서버실 관리 전담인력</td></tr>
+      <tr class="tr"><td class="cat">⚙️ 연간 운영 합계</td><td class="wv">₩9,680,000 <span class="wb2 wws">✓ 5배 저렴</span></td><td class="hv">₩48,928,000~</td><td class="nt" style="color:var(--gold)">WS300 압도적 우위</td></tr>
+
+      <tr class="shd"><td colspan="4">// 3년 총소유비용 (TCO)</td></tr>
+      <tr class="tr"><td class="cat" style="font-size:13px;">💰 3년 TCO 합계</td><td class="wv" style="font-size:13.5px;">₩149,040,000 <span class="wb2 wws">✓ 압승</span></td><td class="hv" style="font-size:13.5px;">₩634,784,000~</td><td class="nt" style="color:var(--gold);font-weight:700;">약 ₩4.9억 절감</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- VERDICT -->
+<div class="stitle">선택 가이드 · WHO SHOULD BUY WHAT</div>
+<div class="verdict">
+  <div class="vc2 vws">
+    <div class="vtitle">🟢 WS300 추천 대상</div>
+    <div class="vp">서버실 없이 즉시 AI 도입 원하는 스타트업·연구소·중견기업</div>
+    <div class="vp">사무실 내 설치 → 데이터 보안 + 즉각적 개발 환경 확보</div>
+    <div class="vp">748GB 통합 메모리로 초대형 LLM 로컬 파인튜닝 필요한 경우</div>
+    <div class="vp">H200 4장 이상 성능을 1/4 비용 + 서버실 없이 원하는 경우</div>
+    <div class="vp">클라우드 GPU 비용 절감 + 데이터 주권 동시 확보 목표</div>
+  </div>
+  <div class="vc2 vh2">
+    <div class="vtitle">🔵 H200 Server 추천 대상</div>
+    <div class="vp">이미 IDC·서버실·랙 인프라를 보유한 대기업·금융·통신사</div>
+    <div class="vp">멀티노드 수십~수백 GPU 클러스터 확장 계획 보유 기관</div>
+    <div class="vp">24/7 SLA 99.9% 이상의 프로덕션 추론 서비스 운영</div>
+    <div class="vp">기존 InfiniBand 패브릭 연결 필요한 HPC 워크로드</div>
+    <div class="vp">전문 인프라 팀 + 기구축 데이터센터 완전 활용 가능 경우</div>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="sum-bar">
+  <div class="si2">🏆</div>
+  <div class="st2">
+    <div class="slbl">// 핵심 결론 · BOTTOM LINE</div>
+    <div class="sbody">
+      WS300은 H200 4장을 초과하는 성능(20 vs 16 PFLOPS)을 <strong>타워형 PC 크기 · 35~45dB 도서관 수준 소음 · 수냉+공냉 하이브리드 내장 · 서버실 완전 불필요</strong>로 구현합니다.
+      3년 TCO 기준 <strong>약 ₩4.9억 절감</strong>, 서버실 구축·운영비까지 합산하면 실질 절감액은 훨씬 더 큽니다.
+      <strong>AI를 처음 도입하거나 클라우드에서 온-프레미스 전환을 검토하는 모든 기업에게 최적의 선택</strong>입니다.
+    </div>
+  </div>
+</div>
+
+<div class="footer">BUSINESS COUNCIL · MSI XPERTSTATION WS300 SALES STRATEGY · 2026 · PREPARED BY A-NODE ITAM SOLUTION</div>
+</div>
+</body>
+</html>
